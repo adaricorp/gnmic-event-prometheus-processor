@@ -1,0 +1,85 @@
+---
+name: Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  goreleaser:
+    name: Build with goreleaser
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: "go.mod"
+          check-latest: true
+
+      - name: Clean up disk space
+        run: |
+          sudo rm -rf \
+            /opt/google/chrome \
+            /opt/microsoft/msedge \
+            /opt/microsoft/powershell \
+            /usr/lib/mono \
+            /usr/local/julia* \
+            /usr/local/share/chromium \
+            /usr/local/share/powershell \
+            /usr/share/dotnet \
+            /usr/share/swift
+
+      - name: Configure parallelism
+        run: echo "PARALLELISM=$(($(nproc) - 2))" >> "${GITHUB_ENV}"
+
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v7
+        with:
+          distribution: goreleaser
+          version: latest
+          args: release --clean --skip=publish --snapshot --parallelism ${{ env.PARALLELISM }}
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: faucet-agent
+          path: dist/
+
+  codechecks:
+    name: Code checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: "go.mod"
+          check-latest: true
+
+      - name: Bootstrap
+        run: ./boot.sh
+
+      - name: Lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          only-new-issues: true
+
+      - name: Tests
+        run: go test ./...
+
+      - name: Govulncheck
+        uses: golang/govulncheck-action@v1
+        with:
+          go-version-input: ""
+          check-latest: true
+          go-version-file: "go.mod"
+          cache: false
+          repo-checkout: false
