@@ -6,7 +6,7 @@ require (
 	github.com/derekparker/trie/v3 v3.2.1
 	github.com/go-jose/go-jose/v4 v4.1.4
 	github.com/hashicorp/go-hclog v1.6.3
-	github.com/hashicorp/go-plugin v1.7.0
+	github.com/hashicorp/go-plugin v1.8.0
 	github.com/itchyny/gojq v0.12.19
 	github.com/openconfig/gnmic v0.45.0
 	github.com/openconfig/gnmic/pkg/api v0.1.11
