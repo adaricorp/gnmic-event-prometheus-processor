@@ -17,7 +17,7 @@ require (
 require (
 	cloud.google.com/go/compute/metadata v0.9.0 // indirect
 	github.com/AlekSi/pointer v1.2.0 // indirect
-	github.com/IBM/sarama v1.48.1 // indirect
+	github.com/IBM/sarama v1.48.2 // indirect
 	github.com/cncf/xds/go v0.0.0-20260202195803-dba9d589def2 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/eapache/go-resiliency v1.7.0 // indirect
