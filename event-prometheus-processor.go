@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"log"
+	"log/slog"
 	"maps"
 	"os"
 	"path/filepath"
@@ -24,7 +24,6 @@ import (
 
 const (
 	processorType = "event-prometheus-processor"
-	loggingPrefix = "[" + processorType + "]"
 )
 
 type ciscoWLC struct {
@@ -121,7 +120,7 @@ type prometheusProcessor struct {
 	targetsConfigs        map[string]*types.TargetConfig
 	actionsDefinitions    map[string]map[string]any
 	processorsDefinitions map[string]map[string]any
-	logger                hclog.Logger
+	logger                *slog.Logger
 }
 
 func (p *prometheusProcessor) Init(cfg any, opts ...formatters.Option) error {
@@ -131,6 +130,14 @@ func (p *prometheusProcessor) Init(cfg any, opts ...formatters.Option) error {
 	}
 
 	p.setupLogger()
+
+	p.logger.Info(
+		"initialising plugin processor",
+		"version",
+		version.Version,
+		"build_date",
+		version.BuildDate,
+	)
 
 	if p.Condition != "" {
 		q, err := gojq.Parse(strings.TrimSpace(p.Condition))
@@ -939,21 +946,22 @@ func (p *prometheusProcessor) WithProcessors(procs map[string]map[string]any) {
 	p.processorsDefinitions = procs
 }
 
-func (p *prometheusProcessor) WithLogger(l *log.Logger) {
+func (p *prometheusProcessor) WithLogger(_ *slog.Logger) {
+	// This function is never called for an external plugin processor,
+	// but we must implement it to satisfy the formatters.EventProcessor interface
 }
 
 func (p *prometheusProcessor) setupLogger() {
-	prefix := loggingPrefix
+	slogLevel := slog.LevelVar{}
+	p.logger = slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{
+		Level:     &slogLevel,
+		AddSource: p.Debug,
+	})).With("processor", processorType)
 	if p.Name != "" {
-		prefix += " [" + p.Name + "]"
+		p.logger = p.logger.With("name", p.Name)
 	}
-	p.logger = hclog.New(&hclog.LoggerOptions{
-		Name:       prefix,
-		Output:     os.Stderr,
-		TimeFormat: "2006/01/02 15:04:05.999999",
-	})
 	if p.Debug {
-		p.logger.SetLevel(hclog.Debug)
+		slogLevel.Set(slog.LevelDebug)
 	}
 }
 
@@ -990,15 +998,7 @@ func main() {
 		DisableTime: true,
 	})
 
-	logger.Info(
-		"starting plugin processor",
-		"name",
-		processorType,
-		"version",
-		version.Version,
-		"build_date",
-		version.BuildDate,
-	)
+	logger.Info("starting plugin processor", "name", processorType)
 
 	plug := &prometheusProcessor{}
 	plugin.Serve(&plugin.ServeConfig{
@@ -1015,9 +1015,7 @@ func main() {
 
 	if plug.eventTraceFile != nil {
 		if err := plug.eventTraceFile.Close(); err != nil {
-			logger.Error("error closing event trace file")
+			logger.Error("error closing event trace file", "name", processorType)
 		}
 	}
-
-	logger.Info("reached END", "name", processorType)
 }
