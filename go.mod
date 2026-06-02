@@ -10,7 +10,7 @@ require (
 	github.com/itchyny/gojq v0.12.19
 	github.com/openconfig/gnmic v0.46.0
 	github.com/openconfig/gnmic/pkg/api v0.1.11
-	github.com/prometheus/common v0.67.5
+	github.com/prometheus/common v0.68.0
 	github.com/stretchr/testify v1.11.1
 )
 
