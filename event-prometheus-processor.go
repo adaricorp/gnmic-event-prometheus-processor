@@ -37,36 +37,36 @@ type ciscoWLC struct {
 
 type confValues struct {
 	// Apply the configuration to any event that matches this YANG path
-	Match string `mapstructure:"match,omitempty"  yaml:"match,omitempty"  json:"match,omitempty"`
+	Match *string `mapstructure:"match,omitempty"  yaml:"match,omitempty"  json:"match,omitempty"`
 	// Apply the configuration to any value in this list
 	Values []string `mapstructure:"values,omitempty" yaml:"values,omitempty" json:"values,omitempty"`
 }
 
 type confTagRenames struct {
 	// Apply the tag renames to any event that matches this YANG path
-	Match string `mapstructure:"match,omitempty"   yaml:"match,omitempty"   json:"match,omitempty"`
+	Match *string `mapstructure:"match,omitempty"   yaml:"match,omitempty"   json:"match,omitempty"`
 	// List of tag renames
 	Renames []struct {
 		// Original tag name
-		From string `mapstructure:"from,omitempty"  yaml:"from,omitempty"  json:"from,omitempty"`
+		From *string `mapstructure:"from,omitempty"  yaml:"from,omitempty"  json:"from,omitempty"`
 		// New tag name
-		To string `mapstructure:"to,omitempty"  yaml:"to,omitempty"  json:"to,omitempty"`
+		To *string `mapstructure:"to,omitempty"  yaml:"to,omitempty"  json:"to,omitempty"`
 	} `mapstructure:"renames,omitempty" yaml:"renames,omitempty" json:"renames,omitempty"`
 }
 
 type confEnumMappings struct {
 	// Apply the enum value mappings to any event that matches this YANG path
-	Match string `mapstructure:"match,omitempty" yaml:"match,omitempty" json:"match,omitempty"`
+	Match *string `mapstructure:"match,omitempty" yaml:"match,omitempty" json:"match,omitempty"`
 	// List of enum value mappings
 	Enums []struct {
 		// Enum name
-		Enum string `mapstructure:"enum,omitempty"  yaml:"enum,omitempty"  json:"enum,omitempty"`
+		Enum *string `mapstructure:"enum,omitempty"  yaml:"enum,omitempty"  json:"enum,omitempty"`
 		// List of value mappings
 		Mappings []struct {
 			// Original string value
-			From string `mapstructure:"from,omitempty"  yaml:"from,omitempty"  json:"from,omitempty"`
+			From *string `mapstructure:"from,omitempty"  yaml:"from,omitempty"  json:"from,omitempty"`
 			// New integer value
-			To int `mapstructure:"to,omitempty"  yaml:"to,omitempty"  json:"to,omitempty"`
+			To *int `mapstructure:"to,omitempty"  yaml:"to,omitempty"  json:"to,omitempty"`
 		} `mapstructure:"mappings,omitempty" yaml:"mappings,omitempty" json:"mappings,omitempty"`
 	} `mapstructure:"enums,omitempty" yaml:"enums,omitempty" json:"enums,omitempty"`
 }
@@ -183,11 +183,39 @@ func (p *prometheusProcessor) Init(cfg any, opts ...formatters.Option) error {
 		// Parse tag rename configuration
 		tagRenames := map[string]map[string]string{}
 		for _, v := range *p.TagRenames {
-			if _, exists := tagRenames[v.Match]; !exists {
-				tagRenames[v.Match] = map[string]string{}
+			if v.Match == nil {
+				p.logger.Error(
+					"tag-renames configuration item missing required field",
+					"field",
+					"match",
+				)
+				continue
+			}
+			if _, exists := tagRenames[*v.Match]; !exists {
+				tagRenames[*v.Match] = map[string]string{}
 			}
 			for _, r := range v.Renames {
-				tagRenames[v.Match][r.From] = r.To
+				if r.From == nil {
+					p.logger.Error(
+						"tag-renames configuration item missing required field",
+						"match",
+						*v.Match,
+						"field",
+						"from",
+					)
+					continue
+				}
+				if r.To == nil {
+					p.logger.Error(
+						"tag-renames configuration item missing required field",
+						"match",
+						*v.Match,
+						"field",
+						"to",
+					)
+					continue
+				}
+				tagRenames[*v.Match][*r.From] = *r.To
 			}
 		}
 		p.tagRenames = tagRenames
@@ -209,11 +237,19 @@ func (p *prometheusProcessor) Init(cfg any, opts ...formatters.Option) error {
 		// Parse value tag configuration
 		valueTags := map[string][]string{}
 		for _, v := range *p.ValueTags {
-			if s, exists := valueTags[v.Match]; exists {
+			if v.Match == nil {
+				p.logger.Error(
+					"value-tags configuration item missing required field",
+					"field",
+					"match",
+				)
+				continue
+			}
+			if s, exists := valueTags[*v.Match]; exists {
 				s = append(s, v.Values...)
-				valueTags[v.Match] = s
+				valueTags[*v.Match] = s
 			} else {
-				valueTags[v.Match] = v.Values
+				valueTags[*v.Match] = v.Values
 			}
 		}
 		p.valueTags = valueTags
@@ -235,15 +271,57 @@ func (p *prometheusProcessor) Init(cfg any, opts ...formatters.Option) error {
 		// Parse enum mapping configuration
 		enumMappings := map[string]map[string]map[string]int{}
 		for _, v := range *p.EnumMappings {
-			if _, exists := enumMappings[v.Match]; !exists {
-				enumMappings[v.Match] = map[string]map[string]int{}
+			if v.Match == nil {
+				p.logger.Error(
+					"enum-mappings configuration item missing required field",
+					"field",
+					"match",
+				)
+				continue
+			}
+			if _, exists := enumMappings[*v.Match]; !exists {
+				enumMappings[*v.Match] = map[string]map[string]int{}
 			}
 			for _, e := range v.Enums {
-				if _, exists := enumMappings[v.Match][e.Enum]; !exists {
-					enumMappings[v.Match][e.Enum] = map[string]int{}
+				if e.Enum == nil {
+					p.logger.Error(
+						"enum-mappings configuration item missing required field",
+						"match",
+						*v.Match,
+						"field",
+						"enum",
+					)
+					continue
+				}
+				if _, exists := enumMappings[*v.Match][*e.Enum]; !exists {
+					enumMappings[*v.Match][*e.Enum] = map[string]int{}
 				}
 				for _, m := range e.Mappings {
-					enumMappings[v.Match][e.Enum][m.From] = m.To
+					if m.From == nil {
+						p.logger.Error(
+							"enum-mappings configuration item missing required field",
+							"match",
+							*v.Match,
+							"enum",
+							*e.Enum,
+							"field",
+							"from",
+						)
+						continue
+					}
+					if m.To == nil {
+						p.logger.Error(
+							"enum-mappings configuration item missing required field",
+							"match",
+							*v.Match,
+							"enum",
+							*e.Enum,
+							"field",
+							"to",
+						)
+						continue
+					}
+					enumMappings[*v.Match][*e.Enum][*m.From] = *m.To
 				}
 			}
 		}
@@ -266,11 +344,19 @@ func (p *prometheusProcessor) Init(cfg any, opts ...formatters.Option) error {
 		// Parse integer info metric configuration
 		integerInfoMetrics := map[string][]string{}
 		for _, v := range *p.IntegerInfoMetrics {
-			if s, exists := integerInfoMetrics[v.Match]; exists {
+			if v.Match == nil {
+				p.logger.Error(
+					"integer-info-metrics configuration item missing required field",
+					"field",
+					"match",
+				)
+				continue
+			}
+			if s, exists := integerInfoMetrics[*v.Match]; exists {
 				s = append(s, v.Values...)
-				integerInfoMetrics[v.Match] = s
+				integerInfoMetrics[*v.Match] = s
 			} else {
-				integerInfoMetrics[v.Match] = v.Values
+				integerInfoMetrics[*v.Match] = v.Values
 			}
 		}
 		p.integerInfoMetrics = integerInfoMetrics
@@ -292,11 +378,19 @@ func (p *prometheusProcessor) Init(cfg any, opts ...formatters.Option) error {
 		// Parse value and info metric configuration
 		valueAndInfoMetrics := map[string][]string{}
 		for _, v := range *p.ValueAndInfoMetrics {
-			if s, exists := valueAndInfoMetrics[v.Match]; exists {
+			if v.Match == nil {
+				p.logger.Error(
+					"value-and-info-metrics configuration item missing required field",
+					"field",
+					"match",
+				)
+				continue
+			}
+			if s, exists := valueAndInfoMetrics[*v.Match]; exists {
 				s = append(s, v.Values...)
-				valueAndInfoMetrics[v.Match] = s
+				valueAndInfoMetrics[*v.Match] = s
 			} else {
-				valueAndInfoMetrics[v.Match] = v.Values
+				valueAndInfoMetrics[*v.Match] = v.Values
 			}
 		}
 		p.valueAndInfoMetrics = valueAndInfoMetrics
