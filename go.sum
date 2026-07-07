@@ -97,8 +97,8 @@ github.com/openconfig/gnmic v0.46.0 h1:9hQEVIK9Fc2J5DMwaQERwcZbW2HQO1nAeNZBsC8w/
 github.com/openconfig/gnmic v0.46.0/go.mod h1:nNOXe04pcuxwmVu0k5+n31LfhYs/R0tcsZj60nx5GbI=
 github.com/openconfig/gnmic/pkg/api v0.1.11 h1:Jrkz3ROyPQDGiXNm4oR52pYgKGApHxb5pDGlFJ1gDso=
 github.com/openconfig/gnmic/pkg/api v0.1.11/go.mod h1:6PntONfjCMq3XzsDfWMkLeoVuBRbkm2foQO5m6PeYo0=
-github.com/openconfig/grpctunnel v0.1.0 h1:EN99qtlExZczgQgp5ANnHRC/Rs62cAG+Tz2BQ5m/maM=
-github.com/openconfig/grpctunnel v0.1.0/go.mod h1:G04Pdu0pml98tdvXrvLaU+EBo3PxYfI9MYqpvdaEHLo=
+github.com/openconfig/grpctunnel v0.2.0 h1:BHkORzsmOeJ7g9g9NmPwqx6JvxfJXSvTPojWQ0MIWiU=
+github.com/openconfig/grpctunnel v0.2.0/go.mod h1:fmJUk4OjycBhtja77+55VqnmGav6QWU2poZSOy6pyJc=
 github.com/petermattis/goid v0.0.0-20260330135022-df67b199bc81 h1:WDsQxOJDy0N1VRAjXLpi8sCEZRSGarLWQevDxpTBRrM=
 github.com/petermattis/goid v0.0.0-20260330135022-df67b199bc81/go.mod h1:pxMtw7cyUw6B2bRH0ZBANSPg+AoSud1I1iyJHI69jH4=
 github.com/pierrec/lz4/v4 v4.1.27 h1:+PhzhWDrjRj89TH2sw43nE3+4+W8lSxIuQadEHZyjUk=
