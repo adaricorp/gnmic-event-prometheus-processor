@@ -44,7 +44,7 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/oklog/run v1.2.0 // indirect
 	github.com/openconfig/gnmi v0.14.1 // indirect
-	github.com/openconfig/grpctunnel v0.1.0 // indirect
+	github.com/openconfig/grpctunnel v0.2.0 // indirect
 	github.com/petermattis/goid v0.0.0-20260330135022-df67b199bc81 // indirect
 	github.com/pierrec/lz4/v4 v4.1.27 // indirect
 	github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10 // indirect
