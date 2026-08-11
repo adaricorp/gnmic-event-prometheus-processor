@@ -8,7 +8,7 @@ require (
 	github.com/hashicorp/go-hclog v1.6.3
 	github.com/hashicorp/go-plugin v1.8.0
 	github.com/itchyny/gojq v0.12.19
-	github.com/openconfig/gnmic v0.46.0
+	github.com/openconfig/gnmic v0.47.0
 	github.com/openconfig/gnmic/pkg/api v0.1.11
 	github.com/prometheus/common v0.70.1
 	github.com/stretchr/testify v1.11.1
