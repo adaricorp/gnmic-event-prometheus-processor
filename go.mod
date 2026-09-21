@@ -8,7 +8,7 @@ require (
 	github.com/hashicorp/go-hclog v1.6.3
 	github.com/hashicorp/go-plugin v1.8.0
 	github.com/itchyny/gojq v0.12.19
-	github.com/openconfig/gnmic v0.48.0
+	github.com/openconfig/gnmic v0.49.0
 	github.com/openconfig/gnmic/pkg/api v0.1.11
 	github.com/prometheus/common v0.71.0
 	github.com/stretchr/testify v1.12.1
@@ -26,6 +26,7 @@ require (
 	github.com/fatih/color v1.19.0 // indirect
 	github.com/fullstorydev/grpcurl v1.9.4 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
+	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/hashicorp/go-uuid v1.0.3 // indirect
 	github.com/hashicorp/yamux v0.1.2 // indirect
 	github.com/itchyny/timefmt-go v0.1.8 // indirect
@@ -57,7 +58,7 @@ require (
 	golang.org/x/sync v0.23.0 // indirect
 	golang.org/x/sys v0.48.0 // indirect
 	golang.org/x/text v0.42.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20260904194346-d0f1323225a4 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20260917231906-eeb232e0883d // indirect
 	google.golang.org/grpc v1.83.2 // indirect
 	google.golang.org/protobuf v1.36.12 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
