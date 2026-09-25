@@ -26,7 +26,7 @@ require (
 	github.com/fatih/color v1.19.0 // indirect
 	github.com/fullstorydev/grpcurl v1.9.4 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
-	github.com/hashicorp/go-uuid v1.0.3 // indirect
+	github.com/hashicorp/go-uuid v1.0.4 // indirect
 	github.com/hashicorp/yamux v0.1.2 // indirect
 	github.com/itchyny/timefmt-go v0.1.8 // indirect
 	github.com/jcmturner/aescts/v2 v2.0.0 // indirect
