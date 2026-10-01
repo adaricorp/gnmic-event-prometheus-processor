@@ -17,7 +17,7 @@ require (
 require (
 	cloud.google.com/go/compute/metadata v0.10.0 // indirect
 	github.com/AlekSi/pointer v1.2.0 // indirect
-	github.com/IBM/sarama v1.61.0 // indirect
+	github.com/IBM/sarama v1.61.1 // indirect
 	github.com/cncf/xds/go v0.0.0-20260202195803-dba9d589def2 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/eapache/go-resiliency v1.7.0 // indirect
@@ -45,7 +45,7 @@ require (
 	github.com/openconfig/gnmi v0.14.1 // indirect
 	github.com/openconfig/grpctunnel v0.2.0 // indirect
 	github.com/petermattis/goid v0.0.0-20260330135022-df67b199bc81 // indirect
-	github.com/pierrec/lz4/v4 v4.1.30 // indirect
+	github.com/pierrec/lz4/v4 v4.1.31 // indirect
 	github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20250401214520-65e299d6c5c9 // indirect
 	github.com/spiffe/go-spiffe/v2 v2.8.2 // indirect
