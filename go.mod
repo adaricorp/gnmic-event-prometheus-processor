@@ -4,7 +4,7 @@ go 1.26.10
 
 require (
 	github.com/derekparker/trie/v3 v3.2.1
-	github.com/go-jose/go-jose/v4 v4.1.7
+	github.com/go-jose/go-jose/v4 v4.1.9
 	github.com/hashicorp/go-hclog v1.6.3
 	github.com/hashicorp/go-plugin v1.8.0
 	github.com/itchyny/gojq v0.12.20
